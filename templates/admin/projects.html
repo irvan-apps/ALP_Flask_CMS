@@ -1,0 +1,65 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Kelola Galeri Proyek{% endblock %}
+
+{% block admin_content %}
+<div class="space-y-6">
+
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-gray-900">Daftar Portofolio Proyek Lapangan</h2>
+            <p class="text-xs text-gray-500">Kelola foto dokumentasi proyek sipil, elektrikal, mekanikal, dan uji teknis.</p>
+        </div>
+        <a href="{{ url_for('admin_project_new') }}" class="bg-brand-orange hover:bg-orange-600 text-white font-semibold px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i> Tambah Proyek Baru
+        </a>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for p in projects %}
+        <div class="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+                <div class="relative h-48 bg-gray-100 overflow-hidden">
+                    <img src="{{ p.image_url }}" alt="{{ p.title }}" class="w-full h-full object-cover">
+                    <span class="absolute top-3 left-3 bg-gray-900/80 backdrop-blur-md text-amber-400 text-xs font-bold px-3 py-1 rounded-full">
+                        {{ p.category }}
+                    </span>
+                    <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-gray-700 text-xs font-bold px-2 py-0.5 rounded-md shadow">
+                        #{{ p.sort_order }}
+                    </span>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-base font-bold text-gray-900 mb-1">{{ p.title }}</h3>
+                    <p class="text-xs text-gray-500 mb-3">{{ p.client_tag or 'PT Arunika Loise Persada' }}</p>
+                    <p class="text-xs text-gray-600 leading-relaxed line-clamp-3 bg-gray-50 p-3 rounded-xl border border-gray-100">{{ p.description }}</p>
+                </div>
+            </div>
+
+            <div class="p-5 pt-0 border-t border-gray-100 mt-2 flex items-center justify-between">
+                <span class="text-[11px] text-gray-400">{{ p.created_at[:10] if p.created_at else '' }}</span>
+                <div class="flex items-center gap-2">
+                    <a href="{{ url_for('admin_project_edit', id=p.id) }}" class="px-3 py-1.5 bg-gray-100 hover:bg-orange-50 hover:text-brand-orange text-gray-700 text-xs font-semibold rounded-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </a>
+                    <form action="{{ url_for('admin_project_delete', id=p.id) }}" method="POST" onsubmit="return confirm('Hapus portofolio proyek ini?');" class="inline">
+                        <button type="submit" class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
+                            <i class="fa-solid fa-trash text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-span-full bg-white rounded-3xl p-12 text-center text-gray-400 border border-gray-200">
+            <i class="fa-solid fa-briefcase text-4xl mb-3 opacity-30 block"></i>
+            <p class="text-sm">Belum ada portofolio proyek yang ditambahkan.</p>
+            <a href="{{ url_for('admin_project_new') }}" class="mt-4 inline-block bg-brand-orange text-white text-xs font-semibold px-4 py-2 rounded-xl">
+                Tambah Proyek Sekarang
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

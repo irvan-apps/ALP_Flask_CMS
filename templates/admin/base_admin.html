@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard CMS{% endblock %} | PT Arunika Loise Persada</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            orange: '#F58220',
+                            yellow: '#FFC72C',
+                            dark: '#111827',
+                            gray: '#1F2937',
+                            light: '#F9FAFB'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Inter & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-gray-900 text-white flex-shrink-0 flex flex-col justify-between transition-all duration-300 z-30 fixed inset-y-0 left-0 md:static md:translate-x-0 -translate-x-full">
+        <div>
+            <!-- Sidebar Header / Logo -->
+            <div class="h-20 flex items-center px-6 border-b border-gray-800 bg-gray-950/60">
+                <a href="{{ url_for('admin_dashboard') }}" class="flex items-center gap-3">
+                    <div class="bg-gradient-to-r from-amber-400 to-brand-orange text-gray-950 font-black px-2.5 py-1.5 rounded-lg text-lg">
+                        ALP
+                    </div>
+                    <div>
+                        <div class="font-bold text-sm tracking-tight text-white leading-tight">CMS PANEL</div>
+                        <div class="text-[10px] text-amber-400 font-medium tracking-wider">PT ARUNIKA LOISE PERSADA</div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="p-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-140px)]">
+                <a href="{{ url_for('admin_dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition {% if request.endpoint == 'admin_dashboard' %}bg-brand-orange text-white shadow-md{% else %}text-gray-300 hover:bg-gray-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-gauge w-5 text-center"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <div class="pt-4 pb-1 px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Konten Website</div>
+
+                <a href="{{ url_for('admin_services') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition {% if 'service' in request.endpoint %}bg-brand-orange text-white shadow-md{% else %}text-gray-300 hover:bg-gray-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-helmet-safety w-5 text-center"></i>
+                    <span>Layanan Kami</span>
+                </a>
+
+                <a href="{{ url_for('admin_projects') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition {% if 'project' in request.endpoint %}bg-brand-orange text-white shadow-md{% else %}text-gray-300 hover:bg-gray-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-briefcase w-5 text-center"></i>
+                    <span>Galeri Proyek</span>
+                </a>
+
+                <a href="{{ url_for('admin_organization') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition {% if 'organization' in request.endpoint %}bg-brand-orange text-white shadow-md{% else %}text-gray-300 hover:bg-gray-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-users-gear w-5 text-center"></i>
+                    <span>Struktur Organisasi</span>
+                </a>
+
+                <a href="{{ url_for('admin_legality') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition {% if 'legality' in request.endpoint %}bg-brand-orange text-white shadow-md{% else %}text-gray-300 hover:bg-gray-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-file-shield w-5 text-center"></i>
+                    <span>Legalitas Perusahaan</span>
+                </a>
+
+                <a href="{{ url_for('admin_clients') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition {% if 'client' in request.endpoint %}bg-brand-orange text-white shadow-md{% else %}text-gray-300 hover:bg-gray-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-handshake w-5 text-center"></i>
+                    <span>Mitra & Klien</span>
+                </a>
+
+                <div class="pt-4 pb-1 px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Interaksi & Sistem</div>
+
+                <a href="{{ url_for('admin_messages') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition {% if 'messages' in request.endpoint %}bg-brand-orange text-white shadow-md{% else %}text-gray-300 hover:bg-gray-800 hover:text-white{% endif %}">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-envelope w-5 text-center"></i>
+                        <span>Pesan Masuk</span>
+                    </div>
+                    {% if unread_messages_count > 0 %}
+                    <span class="bg-amber-400 text-gray-950 text-xs font-bold px-2 py-0.5 rounded-full">
+                        {{ unread_messages_count }}
+                    </span>
+                    {% endif %}
+                </a>
+
+                <a href="{{ url_for('admin_settings') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition {% if request.endpoint == 'admin_settings' %}bg-brand-orange text-white shadow-md{% else %}text-gray-300 hover:bg-gray-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-sliders w-5 text-center"></i>
+                    <span>Pengaturan Website</span>
+                </a>
+
+                <a href="{{ url_for('admin_profile') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition {% if request.endpoint == 'admin_profile' %}bg-brand-orange text-white shadow-md{% else %}text-gray-300 hover:bg-gray-800 hover:text-white{% endif %}">
+                    <i class="fa-solid fa-user-shield w-5 text-center"></i>
+                    <span>Akun & Keamanan</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-gray-800 bg-gray-950/40">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-brand-orange/20 text-brand-orange flex items-center justify-center font-bold text-sm">
+                        {{ session.get('user_name', 'A')[0]|upper }}
+                    </div>
+                    <div class="text-xs">
+                        <div class="font-bold text-white truncate max-w-[100px]">{{ session.get('user_name', 'Admin') }}</div>
+                        <div class="text-gray-400 text-[10px]">Administrator</div>
+                    </div>
+                </div>
+                <a href="{{ url_for('admin_logout') }}" title="Logout" class="p-2 text-gray-400 hover:text-red-400 transition">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Topbar -->
+        <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-8 flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="md:hidden text-gray-600 hover:text-gray-900 text-xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1 class="text-lg sm:text-xl font-bold text-gray-800">
+                    {% block page_title %}Dashboard{% endblock %}
+                </h1>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="{{ url_for('index') }}" target="_blank" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    <span class="hidden sm:inline">Lihat Website</span>
+                </a>
+                <a href="{{ url_for('admin_messages') }}" class="relative p-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition">
+                    <i class="fa-solid fa-bell text-sm"></i>
+                    {% if unread_messages_count > 0 %}
+                    <span class="absolute -top-1 -right-1 w-4 h-4 bg-brand-orange text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                        {{ unread_messages_count }}
+                    </span>
+                    {% endif %}
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Body Scrollable -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-8 bg-gray-50">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mb-6 space-y-2">
+                        {% for category, message in messages %}
+                            <div class="p-4 rounded-xl flex items-center justify-between shadow-sm {% if category == 'success' %}bg-emerald-50 text-emerald-800 border border-emerald-200{% elif category == 'error' %}bg-rose-50 text-rose-800 border border-rose-200{% elif category == 'warning' %}bg-amber-50 text-amber-800 border border-amber-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+                                <div class="flex items-center gap-3 text-sm font-medium">
+                                    <i class="fa-solid {% if category == 'success' %}fa-circle-check text-emerald-600{% elif category == 'error' %}fa-circle-xmark text-rose-600{% elif category == 'warning' %}fa-triangle-exclamation text-amber-600{% else %}fa-circle-info text-blue-600{% endif %} text-base"></i>
+                                    <span>{{ message }}</span>
+                                </div>
+                                <button onclick="this.parentElement.remove()" class="text-xs opacity-60 hover:opacity-100">&times;</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block admin_content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+    </script>
+    {% block admin_scripts %}{% endblock %}
+</body>
+</html>

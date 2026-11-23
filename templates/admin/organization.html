@@ -1,0 +1,168 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Kelola Struktur Organisasi{% endblock %}
+
+{% block admin_content %}
+<div class="space-y-8">
+
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-gray-900">Manajemen & Dewan Direksi</h2>
+            <p class="text-xs text-gray-500">Daftar pemimpin dan tenaga ahli teknik PT Arunika Loise Persada.</p>
+        </div>
+        <button onclick="openAddModal()" class="bg-brand-orange hover:bg-orange-600 text-white font-semibold px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center gap-2">
+            <i class="fa-solid fa-user-plus"></i> Tambah Anggota Tim
+        </button>
+    </div>
+
+    <!-- Team Members Table Card -->
+    <div class="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/80 border-b border-gray-100 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                        <th class="py-4 px-6">Urutan</th>
+                        <th class="py-4 px-6">Profil</th>
+                        <th class="py-4 px-6">Jabatan / Peran</th>
+                        <th class="py-4 px-6">Divisi</th>
+                        <th class="py-4 px-6">Keterangan / Bio</th>
+                        <th class="py-4 px-6 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm">
+                    {% for m in members %}
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="py-4 px-6 font-semibold text-gray-400">#{{ m.sort_order }}</td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3">
+                                <img src="{{ m.photo_url }}" alt="{{ m.name }}" class="w-11 h-11 rounded-full object-cover border border-gray-200 shadow-sm">
+                                <div>
+                                    <div class="font-bold text-gray-900">{{ m.name }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 text-xs font-semibold text-gray-700">
+                            {{ m.role }}
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-lg">
+                                {{ m.department or 'Manajemen' }}
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 max-w-xs text-xs text-gray-600 leading-relaxed truncate">
+                            {{ m.bio }}
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="openEditModal({{ m.id }}, '{{ m.name|escape }}', '{{ m.role|escape }}', '{{ m.department|escape }}', '{{ m.bio|escape }}', '{{ m.photo_url|escape }}', {{ m.sort_order }})" class="p-2 text-gray-500 hover:text-brand-orange hover:bg-orange-50 rounded-lg transition" title="Edit">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <form action="{{ url_for('admin_organization_delete', id=m.id) }}" method="POST" onsubmit="return confirm('Hapus anggota ini?');" class="inline">
+                                    <button type="submit" class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="py-12 text-center text-gray-400">
+                            <i class="fa-solid fa-users text-4xl mb-3 opacity-30 block"></i>
+                            <span>Belum ada data anggota struktur organisasi.</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal Form (Add / Edit) -->
+<div id="memberModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden transition-opacity">
+    <div class="bg-white rounded-3xl max-w-lg w-full mx-4 p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
+        <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+            <h3 id="modalHeading" class="text-lg font-bold text-gray-900">Tambah Anggota Tim</h3>
+            <button onclick="closeMemberModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+        </div>
+
+        <form id="memberForm" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nama Lengkap & Gelar</label>
+                <input type="text" name="name" id="form_name" required placeholder="Nama lengkap..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Jabatan / Role</label>
+                    <input type="text" name="role" id="form_role" required placeholder="Direktur Utama / Manager" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Divisi / Departemen</label>
+                    <input type="text" name="department" id="form_department" placeholder="Divisi Sipil / M&E" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Urutan (Sort Order)</label>
+                    <input type="number" name="sort_order" id="form_sort_order" value="1" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Foto File</label>
+                    <input type="file" name="photo_file" accept="image/*" class="w-full text-xs text-gray-500 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-orange-50 file:text-brand-orange file:font-semibold">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Atau URL Foto Eksternal</label>
+                <input type="text" name="photo_url" id="form_photo_url" placeholder="https://..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs text-gray-900 focus:outline-none focus:border-brand-orange">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Keterangan / Bio Singkat</label>
+                <textarea name="bio" id="form_bio" rows="3" placeholder="Pengalaman atau spesialisasi..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange"></textarea>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
+                <button type="button" onclick="closeMemberModal()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-semibold">Batal</button>
+                <button type="submit" class="bg-brand-orange hover:bg-orange-600 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md text-sm">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block admin_scripts %}
+<script>
+    function openAddModal() {
+        document.getElementById('modalHeading').textContent = "Tambah Anggota Tim";
+        document.getElementById('memberForm').action = "{{ url_for('admin_organization_new') }}";
+        document.getElementById('form_name').value = "";
+        document.getElementById('form_role').value = "";
+        document.getElementById('form_department').value = "";
+        document.getElementById('form_bio').value = "";
+        document.getElementById('form_photo_url').value = "";
+        document.getElementById('form_sort_order').value = "1";
+        document.getElementById('memberModal').classList.remove('hidden');
+    }
+
+    function openEditModal(id, name, role, department, bio, photo_url, sort_order) {
+        document.getElementById('modalHeading').textContent = "Edit Anggota: " + name;
+        document.getElementById('memberForm').action = "/admin/organization/edit/" + id;
+        document.getElementById('form_name').value = name;
+        document.getElementById('form_role').value = role;
+        document.getElementById('form_department').value = department;
+        document.getElementById('form_bio').value = bio;
+        document.getElementById('form_photo_url').value = photo_url;
+        document.getElementById('form_sort_order').value = sort_order;
+        document.getElementById('memberModal').classList.remove('hidden');
+    }
+
+    function closeMemberModal() {
+        document.getElementById('memberModal').classList.add('hidden');
+    }
+</script>
+{% endblock %}

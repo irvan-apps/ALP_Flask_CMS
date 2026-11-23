@@ -1,0 +1,167 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Kelola Legalitas Perusahaan{% endblock %}
+
+{% block admin_content %}
+<div class="space-y-8">
+
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-gray-900">Dokumen Izin & Sertifikasi Resmi</h2>
+            <p class="text-xs text-gray-500">NIB, SIUP, SK Menkumham, LPJK, dan NPWP PT Arunika Loise Persada.</p>
+        </div>
+        <button onclick="openAddLegalModal()" class="bg-brand-orange hover:bg-orange-600 text-white font-semibold px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i> Tambah Dokumen Izin
+        </button>
+    </div>
+
+    <!-- Legalities Table Card -->
+    <div class="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/80 border-b border-gray-100 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                        <th class="py-4 px-6">Urutan</th>
+                        <th class="py-4 px-6">Nama Dokumen</th>
+                        <th class="py-4 px-6">Nomor Izin / SK</th>
+                        <th class="py-4 px-6">Penerbit</th>
+                        <th class="py-4 px-6">Tahun</th>
+                        <th class="py-4 px-6">Status Badge</th>
+                        <th class="py-4 px-6 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm">
+                    {% for doc in legalities %}
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="py-4 px-6 font-semibold text-gray-400">#{{ doc.sort_order }}</td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base shrink-0">
+                                    <i class="fa-solid fa-file-shield"></i>
+                                </div>
+                                <span class="font-bold text-gray-900">{{ doc.title }}</span>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 font-mono text-xs text-gray-700 font-semibold">
+                            {{ doc.doc_number }}
+                        </td>
+                        <td class="py-4 px-6 text-xs text-gray-600">
+                            {{ doc.issuer }}
+                        </td>
+                        <td class="py-4 px-6 text-xs text-gray-500 font-semibold">
+                            {{ doc.year }}
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-lg border border-emerald-200">
+                                {{ doc.badge_text }}
+                            </span>
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="openEditLegalModal({{ doc.id }}, '{{ doc.title|escape }}', '{{ doc.doc_number|escape }}', '{{ doc.issuer|escape }}', '{{ doc.year|escape }}', '{{ doc.badge_text|escape }}', {{ doc.sort_order }})" class="p-2 text-gray-500 hover:text-brand-orange hover:bg-orange-50 rounded-lg transition" title="Edit">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <form action="{{ url_for('admin_legality_delete', id=doc.id) }}" method="POST" onsubmit="return confirm('Hapus dokumen legalitas ini?');" class="inline">
+                                    <button type="submit" class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="py-12 text-center text-gray-400">
+                            <i class="fa-solid fa-file-shield text-4xl mb-3 opacity-30 block"></i>
+                            <span>Belum ada dokumen legalitas yang ditambahkan.</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal Form -->
+<div id="legalModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden transition-opacity">
+    <div class="bg-white rounded-3xl max-w-lg w-full mx-4 p-6 sm:p-8 shadow-2xl">
+        <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+            <h3 id="legalModalHeading" class="text-lg font-bold text-gray-900">Tambah Dokumen Legalitas</h3>
+            <button onclick="closeLegalModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+        </div>
+
+        <form id="legalForm" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nama Dokumen Izin / Akta</label>
+                <input type="text" name="title" id="form_legal_title" required placeholder="Contoh: Nomor Induk Berusaha (NIB)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nomor Registrasi / Dokumen</label>
+                <input type="text" name="doc_number" id="form_legal_doc_number" required placeholder="Contoh: 2408220012345" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 font-mono focus:outline-none focus:border-brand-orange">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Instansi Penerbit</label>
+                    <input type="text" name="issuer" id="form_legal_issuer" required placeholder="BKPM / Kemenkumham" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Tahun Terbit</label>
+                    <input type="text" name="year" id="form_legal_year" required placeholder="2022" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Teks Badge Status</label>
+                    <input type="text" name="badge_text" id="form_legal_badge" value="Terverifikasi" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Urutan (Sort)</label>
+                    <input type="number" name="sort_order" id="form_legal_sort" value="1" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
+                <button type="button" onclick="closeLegalModal()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-semibold">Batal</button>
+                <button type="submit" class="bg-brand-orange hover:bg-orange-600 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md text-sm">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block admin_scripts %}
+<script>
+    function openAddLegalModal() {
+        document.getElementById('legalModalHeading').textContent = "Tambah Dokumen Legalitas";
+        document.getElementById('legalForm').action = "{{ url_for('admin_legality_new') }}";
+        document.getElementById('form_legal_title').value = "";
+        document.getElementById('form_legal_doc_number').value = "";
+        document.getElementById('form_legal_issuer').value = "";
+        document.getElementById('form_legal_year').value = "2022";
+        document.getElementById('form_legal_badge').value = "Terverifikasi";
+        document.getElementById('form_legal_sort').value = "1";
+        document.getElementById('legalModal').classList.remove('hidden');
+    }
+
+    function openEditLegalModal(id, title, doc_number, issuer, year, badge_text, sort_order) {
+        document.getElementById('legalModalHeading').textContent = "Edit Dokumen Legalitas";
+        document.getElementById('legalForm').action = "/admin/legality/edit/" + id;
+        document.getElementById('form_legal_title').value = title;
+        document.getElementById('form_legal_doc_number').value = doc_number;
+        document.getElementById('form_legal_issuer').value = issuer;
+        document.getElementById('form_legal_year').value = year;
+        document.getElementById('form_legal_badge').value = badge_text;
+        document.getElementById('form_legal_sort').value = sort_order;
+        document.getElementById('legalModal').classList.remove('hidden');
+    }
+
+    function closeLegalModal() {
+        document.getElementById('legalModal').classList.add('hidden');
+    }
+</script>
+{% endblock %}

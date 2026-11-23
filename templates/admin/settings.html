@@ -1,0 +1,206 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Pengaturan Profil & Website{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-5xl mx-auto space-y-8">
+
+    <form action="{{ url_for('admin_settings') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+        
+        <!-- General Company Info Card -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
+            <div class="flex items-center gap-3 pb-6 border-b border-gray-100 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-orange-50 text-brand-orange flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Identitas Perusahaan</h3>
+                    <p class="text-xs text-gray-500">Nama resmi perusahaan, akronim, dan tagline bisnis.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Nama Perusahaan</label>
+                    <input type="text" name="company_name" value="{{ settings.company_name }}" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Nama Singkat / Inisial</label>
+                    <input type="text" name="company_short" value="{{ settings.company_short }}" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Tagline Perusahaan</label>
+                    <input type="text" name="company_tagline" value="{{ settings.company_tagline }}" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Section Settings -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
+            <div class="flex items-center gap-3 pb-6 border-b border-gray-100 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-image"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Bagian Beranda (Hero Banner)</h3>
+                    <p class="text-xs text-gray-500">Judul utama, subjudul, dan angka statistik beranda.</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Badge Atas Hero</label>
+                    <input type="text" name="hero_badge" value="{{ settings.hero_badge }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Judul Utama (Awalan)</label>
+                        <input type="text" name="hero_title_prefix" value="{{ settings.hero_title_prefix }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Judul Sorotan (Gradient Orange)</label>
+                        <input type="text" name="hero_title_highlight" value="{{ settings.hero_title_highlight }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Deskripsi Hero</label>
+                    <textarea name="hero_description" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">{{ settings.hero_description }}</textarea>
+                </div>
+
+                <div class="pt-4 border-t border-gray-100">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-600 mb-4">Statistik Capaian (Hero Stats)</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200/80">
+                            <label class="block text-[11px] font-semibold text-gray-500 uppercase mb-1">Angka Stat 1</label>
+                            <input type="text" name="hero_stat_1_num" value="{{ settings.hero_stat_1_num }}" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm font-bold text-brand-orange focus:outline-none mb-2">
+                            <label class="block text-[11px] font-semibold text-gray-500 uppercase mb-1">Label Stat 1</label>
+                            <input type="text" name="hero_stat_1_label" value="{{ settings.hero_stat_1_label }}" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-700 focus:outline-none">
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200/80">
+                            <label class="block text-[11px] font-semibold text-gray-500 uppercase mb-1">Angka Stat 2</label>
+                            <input type="text" name="hero_stat_2_num" value="{{ settings.hero_stat_2_num }}" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm font-bold text-brand-orange focus:outline-none mb-2">
+                            <label class="block text-[11px] font-semibold text-gray-500 uppercase mb-1">Label Stat 2</label>
+                            <input type="text" name="hero_stat_2_label" value="{{ settings.hero_stat_2_label }}" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-700 focus:outline-none">
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200/80">
+                            <label class="block text-[11px] font-semibold text-gray-500 uppercase mb-1">Angka Stat 3</label>
+                            <input type="text" name="hero_stat_3_num" value="{{ settings.hero_stat_3_num }}" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm font-bold text-brand-orange focus:outline-none mb-2">
+                            <label class="block text-[11px] font-semibold text-gray-500 uppercase mb-1">Label Stat 3</label>
+                            <input type="text" name="hero_stat_3_label" value="{{ settings.hero_stat_3_label }}" class="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-700 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tentang Kami & Visi Misi -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
+            <div class="flex items-center gap-3 pb-6 border-b border-gray-100 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Tentang Kami & Visi Misi</h3>
+                    <p class="text-xs text-gray-500">Narasi profil perusahaan, gambar pendukung, dan visi misi.</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Judul Utama Tentang Kami</label>
+                    <input type="text" name="about_heading" value="{{ settings.about_heading }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Paragraf 1</label>
+                    <textarea name="about_p1" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">{{ settings.about_p1 }}</textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Paragraf 2</label>
+                    <textarea name="about_p2" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">{{ settings.about_p2 }}</textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Foto / URL Gambar Tentang Kami</label>
+                        <input type="text" name="about_image" value="{{ settings.about_image }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition mb-2">
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Atau Upload Gambar Baru:</label>
+                        <input type="file" name="about_image_file" accept="image/*" class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-orange-50 file:text-brand-orange hover:file:bg-orange-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Preview Gambar Saat Ini</label>
+                        <img src="{{ settings.about_image }}" alt="About Preview" class="w-full h-32 object-cover rounded-xl border border-gray-200 shadow-sm">
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-gray-100 space-y-4">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-600">Visi & Misi</h4>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Visi Perusahaan</label>
+                        <textarea name="vision_text" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">{{ settings.vision_text }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Misi Poin 1</label>
+                        <input type="text" name="mission_1" value="{{ settings.mission_1 }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Misi Poin 2</label>
+                        <input type="text" name="mission_2" value="{{ settings.mission_2 }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact & Location Card -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
+            <div class="flex items-center gap-3 pb-6 border-b border-gray-100 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-address-book"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Kontak, Alamat & Footer</h3>
+                    <p class="text-xs text-gray-500">Alamat kantor, nomor WhatsApp, email, dan domain website.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Alamat Kantor Lengkap</label>
+                    <textarea name="company_address" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">{{ settings.company_address }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Alamat Email Resmi</label>
+                    <input type="email" name="company_email" value="{{ settings.company_email }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Alamat Website</label>
+                    <input type="text" name="company_website" value="{{ settings.company_website }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Nomor Telepon</label>
+                    <input type="text" name="company_phone" value="{{ settings.company_phone }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Nomor WhatsApp (Awali 62, cth: 62812xxxx)</label>
+                    <input type="text" name="company_whatsapp" value="{{ settings.company_whatsapp }}" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange transition">
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end gap-4 sticky bottom-6 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-gray-200 shadow-xl">
+            <button type="submit" class="bg-gradient-to-r from-amber-400 to-brand-orange text-gray-950 font-bold px-8 py-3.5 rounded-xl shadow-lg hover:opacity-95 transition text-sm flex items-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Simpan Semua Pengaturan</span>
+            </button>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

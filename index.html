@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Arunika Loise Persada (ALP) | Civil Engineering & M&E</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            orange: '#F58220',
+                            yellow: '#FFC72C',
+                            dark: '#111827',
+                            gray: '#1F2937',
+                            light: '#F9FAFB'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Inter & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(17,24,39,0.95) 0%, rgba(31,41,55,0.85) 100%), url('https://images.unsplash.com/photo-1541888946425-d0fbb18f764a?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased selection:bg-brand-orange selection:text-white">
+
+    <!-- Notification Modal for Form / Actions -->
+    <div id="notificationModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden transition-opacity duration-300">
+        <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl transform transition-transform duration-300 scale-95" id="modalContent">
+            <div class="text-center">
+                <div id="modalIcon" class="w-16 h-16 bg-amber-100 text-brand-orange rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h3 id="modalTitle" class="text-xl font-bold text-gray-900 mb-2">Pesan Terkirim</h3>
+                <p id="modalMessage" class="text-gray-600 text-sm mb-6">Terima kasih telah menghubungi PT Arunika Loise Persada. Tim kami akan segera merespon.</p>
+                <button onclick="closeModal()" class="w-full bg-gradient-to-r from-brand-orange to-amber-500 text-white font-semibold py-3 rounded-xl shadow-lg hover:opacity-90 transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 text-white transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo Brand -->
+            <a href="#beranda" class="flex items-center gap-3 group">
+                <div class="bg-gradient-to-r from-amber-400 to-brand-orange p-2.5 rounded-xl shadow-md text-gray-900 font-extrabold text-xl tracking-wider flex items-center justify-center">
+                    <span class="text-gray-900">ALP</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-bold text-base sm:text-lg tracking-tight leading-tight group-hover:text-amber-400 transition">PT ARUNIKA LOISE PERSADA</span>
+                    <span class="text-xs text-amber-400 font-medium tracking-widest uppercase">Civil Engineering & M&E</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden lg:flex items-center space-x-1 xl:space-x-3 text-sm font-medium">
+                <a href="#beranda" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Beranda</a>
+                <a href="#tentang" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Tentang Kami</a>
+                <a href="#visi-misi" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Visi Misi</a>
+                <a href="#layanan" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Layanan</a>
+                <a href="#proyek" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Proyek</a>
+                <a href="#organisasi" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Struktur</a>
+                <a href="#legalitas" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Legalitas</a>
+                <a href="#kontak" class="px-4 py-2 bg-brand-orange text-white rounded-xl shadow-md hover:bg-orange-600 transition font-semibold">Kontak</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="menuBtn" class="lg:hidden text-2xl text-amber-400 focus:outline-none p-2">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Drawer -->
+        <div id="mobileMenu" class="lg:hidden hidden bg-gray-900 border-t border-gray-800 px-6 py-6 space-y-4 shadow-xl">
+            <a href="#beranda" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Beranda</a>
+            <a href="#tentang" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Tentang Kami</a>
+            <a href="#visi-misi" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Visi Misi</a>
+            <a href="#layanan" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Layanan</a>
+            <a href="#proyek" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Proyek</a>
+            <a href="#organisasi" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Struktur Organisasi</a>
+            <a href="#legalitas" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Legalitas</a>
+            <a href="#kontak" class="block text-center bg-brand-orange text-white py-3 rounded-xl font-semibold shadow-lg mobile-link">Kontak Kami</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="hero-gradient min-h-screen flex items-center pt-24 pb-16 relative overflow-hidden text-white">
+        <!-- Decorative Background Glows -->
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-brand-orange/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-amber-400 text-xs sm:text-sm font-semibold tracking-wide">
+                        <i class="fa-solid fa-helmet-safety"></i> General Contractor & Mechanical Electrical
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl xl:text-6xl font-extrabold tracking-tight leading-tight">
+                        Mewujudkan Karya Konstruksi yang <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-brand-orange">Lebih Nyata</span>
+                    </h1>
+                    <p class="text-gray-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0">
+                        PT Arunika Loise Persada (ALP) hadir sejak 2022 sebagai mitra terpercaya dalam bidang jasa konstruksi sipil, gedung, infrastruktur, serta mechanical & electrical dengan dukungan SDM berpengalaman lebih dari 20 tahun.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#layanan" class="w-full sm:w-auto bg-gradient-to-r from-amber-400 to-brand-orange text-gray-900 font-bold px-8 py-4 rounded-xl shadow-xl hover:opacity-90 transition transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2">
+                            <span>Jelajahi Layanan</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#kontak" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold px-8 py-4 rounded-xl backdrop-blur-md transition text-center">
+                            Hubungi Kami
+                        </a>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-3 gap-4 pt-8 border-t border-gray-800 mt-8">
+                        <div>
+                            <div class="text-3xl font-extrabold text-amber-400">20+</div>
+                            <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Tahun Pengalaman SDM</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-extrabold text-amber-400">2022</div>
+                            <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Tahun Berdiri</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-extrabold text-amber-400">100%</div>
+                            <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Komitmen Mutu</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Card / Visual Graphic -->
+                <div class="lg:col-span-5">
+                    <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-6 sm:p-8 rounded-3xl border border-gray-700 shadow-2xl relative">
+                        <div class="absolute -top-3 -right-3 bg-amber-400 text-gray-900 text-xs font-bold px-4 py-1.5 rounded-full shadow-md uppercase tracking-wider">
+                            Verified Company
+                        </div>
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 bg-brand-orange/20 text-amber-400 rounded-2xl flex items-center justify-center text-2xl font-bold shrink-0">
+                                    <i class="fa-solid fa-building"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">PT Arunika Loise Persada</h3>
+                                    <p class="text-xs text-gray-400">Civil Engineering & Mechanical Electrical</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3 pt-2 text-sm text-gray-300">
+                                <div class="flex items-start gap-3">
+                                    <i class="fa-solid fa-location-dot text-amber-400 mt-1"></i>
+                                    <span>Medang Lestari Blok C-IV/A22 Pagedangan, Kabupaten Tangerang, Banten - 15334</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-globe text-amber-400"></i>
+                                    <span>www.arunikapersada.co.id</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-envelope text-amber-400"></i>
+                                    <span>info@arunikapersada.co.id</span>
+                                </div>
+                            </div>
+                            <div class="pt-4 border-t border-gray-700">
+                                <a href="#proyek" class="block w-full py-3 bg-gray-700 hover:bg-gray-600 text-amber-400 text-center font-semibold rounded-xl transition text-sm">
+                                    Lihat Portfolio Proyek <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tentang Kami Section -->
+    <section id="tentang" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Image or visual box -->
+                <div class="lg:col-span-6 relative">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+                        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1000&q=80" alt="Tentang PT Arunika Loise Persada" class="w-full h-[400px] object-cover hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-8">
+                            <div class="text-white">
+                                <span class="bg-brand-orange text-xs font-bold px-3 py-1 rounded-full uppercase">Sejak 2022</span>
+                                <h4 class="text-xl font-bold mt-2">Profesional & Berpengalaman</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Floating badge -->
+                    <div class="absolute -bottom-6 -right-6 sm:bottom-8 sm:-right-8 bg-gradient-to-br from-amber-400 to-brand-orange text-gray-900 p-6 rounded-3xl shadow-xl max-w-xs hidden sm:block">
+                        <div class="text-3xl font-extrabold mb-1">20+ Tahun</div>
+                        <div class="text-xs font-semibold leading-relaxed">Pengalaman SDM dalam industri konstruksi dan M&E nasional.</div>
+                    </div>
+                </div>
+
+                <!-- Text Content -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div>
+                        <span class="text-brand-orange font-bold text-sm tracking-wider uppercase bg-orange-50 px-3 py-1 rounded-lg">Tentang Kami</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-3">Membangun Kepercayaan Melalui Mutu dan Keandalan Nyata</h2>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed text-base">
+                        <strong>PT Arunika Loise Persada (ALP)</strong> didirikan pada tahun 2022 sebagai perusahaan nasional yang bergerak di bidang jasa Konstruksi, Mechanical, dan Electrical. Kami berkomitmen untuk memberikan solusi konstruksi yang komprehensif, efisien, dan berstandar tinggi.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed text-base">
+                        Didukung oleh Sumber Daya Manusia (SDM) yang sudah berpengalaman lebih dari 20 Tahun di bidangnya masing-masing, PT Arunika Loise Persada berkomitmen penuh kepada para pelanggan untuk selalu menghadirkan pelayanan jasa konstruksi terbaik dalam menciptakan karya konstruksi yang lebih nyata.
+                    </p>
+
+                    <!-- Key highlights -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <div class="text-brand-orange text-xl mt-0.5"><i class="fa-solid fa-circle-check"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">SDM Berpengalaman</h4>
+                                <p class="text-xs text-gray-500 mt-1">Pengalaman lebih dari 2 dekade di bidang teknik sipil & M&E.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <div class="text-brand-orange text-xl mt-0.5"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">Standar Kualitas Tinggi</h4>
+                                <p class="text-xs text-gray-500 mt-1">Menjunjung tinggi standar keselamatan & ketepatan waktu.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visi & Misi Section -->
+    <section id="visi-misi" class="py-20 bg-gray-900 text-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-amber-400 font-bold text-sm tracking-wider uppercase bg-white/10 px-3 py-1 rounded-lg">Visi & Misi</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold mt-3">Komitmen Menuju Perusahaan Konstruksi Unggul</h2>
+                <p class="text-gray-400 mt-2 text-sm sm:text-base">Landasan arah strategis PT Arunika Loise Persada dalam melayani industri konstruksi Indonesia.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Visi Card -->
+                <div class="bg-gradient-to-br from-gray-800 to-gray-850 p-8 sm:p-10 rounded-3xl border border-gray-700 shadow-xl relative overflow-hidden group hover:border-amber-400/50 transition">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-400/5 rounded-full blur-2xl group-hover:bg-amber-400/10 transition"></div>
+                    <div class="w-14 h-14 bg-amber-400/10 text-amber-400 rounded-2xl flex items-center justify-center text-2xl font-bold mb-6">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Visi Perusahaan</h3>
+                    <p class="text-gray-300 text-lg leading-relaxed">
+                        "Menjadi perusahaan konstruksi terbaik yang berfokus pada perkembangan teknologi konstruksi, sumber daya manusia dan tata kelola perusahaan yang baik."
+                    </p>
+                </div>
+
+                <!-- Misi Card -->
+                <div class="bg-gradient-to-br from-gray-800 to-gray-850 p-8 sm:p-10 rounded-3xl border border-gray-700 shadow-xl relative overflow-hidden group hover:border-brand-orange/50 transition">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-orange/5 rounded-full blur-2xl group-hover:bg-brand-orange/10 transition"></div>
+                    <div class="w-14 h-14 bg-brand-orange/10 text-brand-orange rounded-2xl flex items-center justify-center text-2xl font-bold mb-6">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Misi Perusahaan</h3>
+                    <ul class="space-y-4 text-gray-300">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-brand-orange mt-1"></i>
+                            <span>Meningkatkan Daya Saing Perusahaan di Industri Jasa Konstruksi.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-brand-orange mt-1"></i>
+                            <span>Meningkatkan Kualitas SDM untuk menghasilkan Tenaga Kerja yang berkualitas tinggi.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layanan Kami Section -->
+    <section id="layanan" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-orange font-bold text-sm tracking-wider uppercase bg-orange-50 px-3 py-1 rounded-lg">Layanan Kami</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-3">Solusi Menyeluruh Konstruksi & M&E</h2>
+                <p class="text-gray-600 mt-2 text-sm sm:text-base">Kami menyediakan keahlian profesional di bidang teknik sipil dan mekanikal elektrikal.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Civil & Construction -->
+                <div class="bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-gray-100 flex flex-col justify-between hover:shadow-2xl transition">
+                    <div>
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 bg-brand-orange/10 text-brand-orange rounded-2xl flex items-center justify-center text-2xl font-bold">
+                                <i class="fa-solid fa-helmet-safety"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-brand-orange uppercase tracking-wider">01</span>
+                                <h3 class="text-2xl font-bold text-gray-900">Civil & Construction</h3>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-6">Meliputi pembangunan konstruksi sipil, perencanaan tata letak, dan design arsitektural maupun struktural.</p>
+                        
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-building text-brand-orange"></i> Gedung Bertingkat & Komersial
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-house text-brand-orange"></i> Perumahan / Residential
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-city text-brand-orange"></i> Real Estate Development
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-water text-brand-orange"></i> Irigasi & Saluran Air
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-bridge text-brand-orange"></i> Jembatan & Infrastruktur
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#kontak" class="w-full py-3 bg-gray-900 text-white font-semibold text-center rounded-xl hover:bg-brand-orange transition text-sm">
+                        Konsultasi Layanan Sipil
+                    </a>
+                </div>
+
+                <!-- Mechanical & Electrical -->
+                <div class="bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-gray-100 flex flex-col justify-between hover:shadow-2xl transition">
+                    <div>
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 bg-amber-400/10 text-amber-600 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">02</span>
+                                <h3 class="text-2xl font-bold text-gray-900">Mechanical & Electrical</h3>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-6">Pengerjaan segala kebutuhan sistem kelistrikan, mekanikal, dan commissioning dengan standar industri terkini.</p>
+                        
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-plug text-amber-500"></i> Instalasi Listrik & Power
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-network-wired text-amber-500"></i> Penarikan Kabel (Cable Pulling)
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-server text-amber-500"></i> Pemasangan Panel Listrik
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-gas-pump text-amber-500"></i> Pemasangan Genset & Backup Power
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700 font-medium bg-gray-50 p-3 rounded-xl">
+                                <i class="fa-solid fa-clipboard-check text-amber-500"></i> Testing & Commissioning
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#kontak" class="w-full py-3 bg-gray-900 text-white font-semibold text-center rounded-xl hover:bg-amber-500 hover:text-gray-900 transition text-sm">
+                        Konsultasi Layanan M&E
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeri Proyek Kami Section -->
+    <section id="proyek" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-orange font-bold text-sm tracking-wider uppercase bg-orange-50 px-3 py-1 rounded-lg">Proyek Kami</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-3">Portofolio Pekerjaan Lapangan</h2>
+                <p class="text-gray-600 mt-2 text-sm sm:text-base">Dokumentasi aktual pelaksanaan proyek konstruksi sipil dan instalasi mechanical & electrical.</p>
+            </div>
+
+            <!-- Proyek Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Proyek 1 -->
+                <div class="group bg-gray-900 rounded-3xl overflow-hidden shadow-xl border border-gray-800 flex flex-col">
+                    <div class="relative h-60 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80" alt="Instalasi Kabel Power" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+                        <span class="absolute top-4 left-4 bg-brand-orange text-white text-xs font-bold px-3 py-1 rounded-full">M&E</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Instalasi Kabel Power</h3>
+                            <p class="text-gray-400 text-sm">Pemasangan jalur kabel tegangan menengah dan rendah dengan standar keselamatan tinggi.</p>
+                        </div>
+                        <div class="pt-4 mt-4 border-t border-gray-800 text-xs text-amber-400 font-semibold flex items-center justify-between">
+                            <span>PT Arunika Loise Persada</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proyek 2 -->
+                <div class="group bg-gray-900 rounded-3xl overflow-hidden shadow-xl border border-gray-800 flex flex-col">
+                    <div class="relative h-60 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=800&q=80" alt="Rebar Scan Retaining Wall" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+                        <span class="absolute top-4 left-4 bg-amber-500 text-gray-900 text-xs font-bold px-3 py-1 rounded-full">Civil Test</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Rebar Scan Retaining Wall</h3>
+                            <p class="text-gray-400 text-sm">Pengujian non-destruktif struktur dinding penahan tanah menggunakan teknologi pemindaian baja tulangan.</p>
+                        </div>
+                        <div class="pt-4 mt-4 border-t border-gray-800 text-xs text-amber-400 font-semibold flex items-center justify-between">
+                            <span>PT Arunika Loise Persada</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proyek 3 -->
+                <div class="group bg-gray-900 rounded-3xl overflow-hidden shadow-xl border border-gray-800 flex flex-col">
+                    <div class="relative h-60 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=800&q=80" alt="Instalasi Panel" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+                        <span class="absolute top-4 left-4 bg-brand-orange text-white text-xs font-bold px-3 py-1 rounded-full">Electrical</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Instalasi Panel Listrik</h3>
+                            <p class="text-gray-400 text-sm">Perakitan dan pemasangan panel distribusi utama untuk gedung komersial dan industri.</p>
+                        </div>
+                        <div class="pt-4 mt-4 border-t border-gray-800 text-xs text-amber-400 font-semibold flex items-center justify-between">
+                            <span>PT Arunika Loise Persada</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proyek 4 -->
+                <div class="group bg-gray-900 rounded-3xl overflow-hidden shadow-xl border border-gray-800 flex flex-col">
+                    <div class="relative h-60 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80" alt="Instalasi Genset" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+                        <span class="absolute top-4 left-4 bg-amber-500 text-gray-900 text-xs font-bold px-3 py-1 rounded-full">Mechanical</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Instalasi Genset</h3>
+                            <p class="text-gray-400 text-sm">Pemasangan unit generator set lengkap dengan sistem bahan bakar dan peredam suara.</p>
+                        </div>
+                        <div class="pt-4 mt-4 border-t border-gray-800 text-xs text-amber-400 font-semibold flex items-center justify-between">
+                            <span>PT Arunika Loise Persada</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proyek 5 -->
+                <div class="group bg-gray-900 rounded-3xl overflow-hidden shadow-xl border border-gray-800 flex flex-col md:col-span-2 lg:col-span-2">
+                    <div class="relative h-60 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=1200&q=80" alt="Pekerjaan Sipil" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+                        <span class="absolute top-4 left-4 bg-brand-orange text-white text-xs font-bold px-3 py-1 rounded-full">Civil Construction</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Pekerjaan Sipil & Infrastruktur</h3>
+                            <p class="text-gray-400 text-sm">Pembangunan infrastruktur umum, perbaikan jalan kawasan, drainase, serta struktur beton bertulang dengan pengawasan mutu ketat.</p>
+                        </div>
+                        <div class="pt-4 mt-4 border-t border-gray-800 text-xs text-amber-400 font-semibold flex items-center justify-between">
+                            <span>PT Arunika Loise Persada</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Klien Kami Section -->
+    <section class="py-16 bg-gray-900 border-y border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="text-amber-400 font-bold text-xs tracking-widest uppercase">Kepercayaan Mitra & Klien</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2 mb-10">Klien & Related Business</h2>
+            
+            <div class="flex flex-wrap items-center justify-center gap-12 sm:gap-20">
+                <!-- Jasa Marga -->
+                <div class="bg-gray-800/80 px-8 py-6 rounded-2xl border border-gray-700 shadow-lg flex items-center gap-3 hover:border-brand-orange transition">
+                    <i class="fa-solid fa-road text-3xl text-brand-orange"></i>
+                    <div class="text-left">
+                        <div class="text-lg font-extrabold text-white tracking-wider">JASAMARGA</div>
+                        <div class="text-xs text-gray-400">Client Partner</div>
+                    </div>
+                </div>
+
+                <!-- Schneider Electric -->
+                <div class="bg-gray-800/80 px-8 py-6 rounded-2xl border border-gray-700 shadow-lg flex items-center gap-3 hover:border-amber-400 transition">
+                    <i class="fa-solid fa-bolt text-3xl text-amber-400"></i>
+                    <div class="text-left">
+                        <div class="text-lg font-extrabold text-white tracking-wide">Schneider</div>
+                        <div class="text-xs text-amber-400 font-semibold">Life Is On • Related Business</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontak & Footer Section -->
+    <footer id="kontak" class="bg-gray-950 text-white pt-20 pb-10 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-gray-800">
+                <!-- Company Info -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-gradient-to-r from-amber-400 to-brand-orange p-2.5 rounded-xl text-gray-900 font-extrabold text-xl">
+                            ALP
+                        </div>
+                        <div>
+                            <span class="font-bold text-lg tracking-tight">PT ARUNIKA LOISE PERSADA</span>
+                            <span class="block text-xs text-amber-400 font-medium">Civil Engineering | M&E</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Perusahaan nasional terpercaya penyedia layanan jasa konstruksi gedung, infrastruktur, serta mechanical & electrical dengan tenaga ahli berpengalaman lebih dari 20 tahun.
+                    </p>
+                    <div class="space-y-3 text-sm text-gray-300">
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-location-dot text-brand-orange mt-1"></i>
+                            <span>Medang Lestari Blok C-IV/A22 Pagedangan, Kabupaten Tangerang, Banten - 15334</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-globe text-brand-orange"></i>
+                            <span>www.arunikapersada.co.id</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-envelope text-brand-orange"></i>
+                            <span>info@arunikapersada.co.id</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="lg:col-span-3 space-y-4">
+                    <h4 class="text-lg font-bold text-amber-400">Navigasi Utama</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#beranda" class="hover:text-amber-400 transition">Beranda</a></li>
+                        <li><a href="#tentang" class="hover:text-amber-400 transition">Tentang Kami</a></li>
+                        <li><a href="#visi-misi" class="hover:text-amber-400 transition">Visi & Misi</a></li>
+                        <li><a href="#layanan" class="hover:text-amber-400 transition">Layanan Kami</a></li>
+                        <li><a href="#proyek" class="hover:text-amber-400 transition">Galeri Proyek</a></li>
+                        <li><a href="#organisasi" class="hover:text-amber-400 transition">Struktur Organisasi</a></li>
+                        <li><a href="#legalitas" class="hover:text-amber-400 transition">Legalitas Perusahaan</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-4 space-y-4">
+                    <h4 class="text-lg font-bold text-amber-400">Kirim Pesan / Inquiries</h4>
+                    <form id="contactForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div>
+                            <input type="text" id="nama" required placeholder="Nama Lengkap" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-orange transition">
+                        </div>
+                        <div>
+                            <input type="email" id="email" required placeholder="Alamat Email" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-orange transition">
+                        </div>
+                        <div>
+                            <textarea id="pesan" required rows="3" placeholder="Pesan atau Kebutuhan Proyek Anda..." class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-orange transition"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-amber-400 to-brand-orange text-gray-900 font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition text-sm">
+                            Kirim Pesan Sekarang
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500">
+                <p>&copy; 2026 PT Arunika Loise Persada. All Rights Reserved.</p>
+                <p class="mt-2 sm:mt-0">Civil Engineering | Mechanical & Electrical</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Form Submit Handler & Modal Box (No alert() used as per guidelines)
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const nama = document.getElementById('nama').value;
+            const modal = document.getElementById('notificationModal');
+            const modalMessage = document.getElementById('modalMessage');
+            
+            modalMessage.textContent = `Terima kasih ${nama}, pesan Anda telah berhasil dikirimkan kepada Tim PT Arunika Loise Persada. Kami akan segera menghubungi Anda.`;
+            modal.classList.remove('hidden');
+            
+            document.getElementById('contactForm').reset();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('notificationModal');
+            modal.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

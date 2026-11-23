@@ -1,0 +1,66 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Akun & Keamanan{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-2xl mx-auto space-y-8">
+
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm">
+        <div class="flex items-center gap-4 pb-6 border-b border-gray-100 mb-6">
+            <div class="w-14 h-14 rounded-2xl bg-orange-50 text-brand-orange flex items-center justify-center text-2xl font-bold">
+                {{ user.name[0]|upper if user.name else 'A' }}
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-gray-900">{{ user.name }}</h3>
+                <p class="text-xs text-gray-500">Username: <strong class="text-gray-800">{{ user.username }}</strong> • Terdaftar sejak {{ user.created_at[:10] }}</p>
+            </div>
+        </div>
+
+        <form method="POST" class="space-y-6">
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-4">Informasi Profil</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Nama Tampilan</label>
+                        <input type="text" name="name" value="{{ user.name }}" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Alamat Email</label>
+                        <input type="email" name="email" value="{{ user.email }}" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-gray-100">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Ganti Kata Sandi (Password)</h4>
+                <p class="text-xs text-gray-400 mb-4">Kosongkan jika Anda tidak ingin mengubah kata sandi.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Kata Sandi Saat Ini</label>
+                        <input type="password" name="current_password" placeholder="Masukkan kata sandi saat ini" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Kata Sandi Baru</label>
+                            <input type="password" name="new_password" placeholder="Minimal 6 karakter" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Konfirmasi Kata Sandi Baru</label>
+                            <input type="password" name="confirm_password" placeholder="Ulangi kata sandi baru" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex justify-end">
+                <button type="submit" class="bg-brand-orange hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Simpan Perubahan</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
