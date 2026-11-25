@@ -1,18 +1,61 @@
 {% extends "admin/base_admin.html" %}
 
-{% block page_title %}Kelola Struktur Organisasi{% endblock %}
+{% block page_title %}Kelola Struktur Organisasi & Tenaga Ahli{% endblock %}
 
 {% block admin_content %}
-<div class="space-y-8">
+<div class="space-y-6">
 
+    <!-- Header Section -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-            <h2 class="text-xl font-bold text-gray-900">Manajemen & Dewan Direksi</h2>
-            <p class="text-xs text-gray-500">Daftar pemimpin dan tenaga ahli teknik PT Arunika Loise Persada.</p>
+            <h2 class="text-xl font-bold text-gray-900">Manajemen & Tenaga Ahli Konstruksi</h2>
+            <p class="text-xs text-gray-500">Kelola tim, tenaga ahli, dan atur visibilitas (Hide / Unhide) di landing page.</p>
         </div>
         <button onclick="openAddModal()" class="bg-brand-orange hover:bg-orange-600 text-white font-semibold px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition flex items-center gap-2">
-            <i class="fa-solid fa-user-plus"></i> Tambah Anggota Tim
+            <i class="fa-solid fa-user-plus"></i> Tambah Tenaga Ahli Baru
         </button>
+    </div>
+
+    <!-- Master Section Hide/Unhide Control Banner -->
+    <div class="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl {% if show_organization != '0' %}bg-emerald-50 text-emerald-600{% else %}bg-rose-50 text-rose-600{% endif %} flex items-center justify-center text-2xl shrink-0">
+                <i class="fa-solid {% if show_organization != '0' %}fa-eye{% else %}fa-eye-slash{% endif %}"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-bold text-gray-900">Status Bagian Tenaga Ahli di Landing Page:</h3>
+                    {% if show_organization != '0' %}
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Ditampilkan (Unhide)
+                    </span>
+                    {% else %}
+                    <span class="bg-rose-100 text-rose-800 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-rose-500"></span> Disembunyikan (Hide)
+                    </span>
+                    {% endif %}
+                </div>
+                <p class="text-xs text-gray-500 mt-1">
+                    {% if show_organization != '0' %}
+                    Bagian Struktur Organisasi & Tenaga Ahli saat ini <strong>tampil</strong> di website publik.
+                    {% else %}
+                    Bagian Struktur Organisasi & Tenaga Ahli saat ini <strong>tersembunyi</strong> dan tidak terlihat oleh pengunjung website.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <form action="{{ url_for('admin_organization_toggle_section') }}" method="POST">
+            {% if show_organization != '0' %}
+            <button type="submit" class="px-5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                <i class="fa-solid fa-eye-slash"></i> Sembunyikan dari Landing Page (Hide)
+            </button>
+            {% else %}
+            <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-2">
+                <i class="fa-solid fa-eye"></i> Tampilkan di Landing Page (Unhide)
+            </button>
+            {% endif %}
+        </form>
     </div>
 
     <!-- Team Members Table Card -->
@@ -25,19 +68,20 @@
                         <th class="py-4 px-6">Profil</th>
                         <th class="py-4 px-6">Jabatan / Peran</th>
                         <th class="py-4 px-6">Divisi</th>
-                        <th class="py-4 px-6">Keterangan / Bio</th>
+                        <th class="py-4 px-6 text-center">Status Tampil</th>
                         <th class="py-4 px-6 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 text-sm">
                     {% for m in members %}
-                    <tr class="hover:bg-gray-50/50 transition">
+                    <tr class="hover:bg-gray-50/50 transition {% if m.is_visible == 0 %}bg-gray-50/40 opacity-75{% endif %}">
                         <td class="py-4 px-6 font-semibold text-gray-400">#{{ m.sort_order }}</td>
                         <td class="py-4 px-6">
                             <div class="flex items-center gap-3">
                                 <img src="{{ m.photo_url }}" alt="{{ m.name }}" class="w-11 h-11 rounded-full object-cover border border-gray-200 shadow-sm">
                                 <div>
                                     <div class="font-bold text-gray-900">{{ m.name }}</div>
+                                    <div class="text-[11px] text-gray-500 max-w-xs truncate">{{ m.bio }}</div>
                                 </div>
                             </div>
                         </td>
@@ -49,15 +93,39 @@
                                 {{ m.department or 'Manajemen' }}
                             </span>
                         </td>
-                        <td class="py-4 px-6 max-w-xs text-xs text-gray-600 leading-relaxed truncate">
-                            {{ m.bio }}
+                        <td class="py-4 px-6 text-center">
+                            {% if m.is_visible != 0 %}
+                            <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-200 inline-flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check text-[10px]"></i> Aktif
+                            </span>
+                            {% else %}
+                            <span class="bg-gray-100 text-gray-600 text-xs font-bold px-2.5 py-1 rounded-full border border-gray-200 inline-flex items-center gap-1">
+                                <i class="fa-solid fa-eye-slash text-[10px]"></i> Hidden
+                            </span>
+                            {% endif %}
                         </td>
                         <td class="py-4 px-6">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEditModal({{ m.id }}, '{{ m.name|escape }}', '{{ m.role|escape }}', '{{ m.department|escape }}', '{{ m.bio|escape }}', '{{ m.photo_url|escape }}', {{ m.sort_order }})" class="p-2 text-gray-500 hover:text-brand-orange hover:bg-orange-50 rounded-lg transition" title="Edit">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <!-- 1-Click Hide / Unhide Button -->
+                                <form action="{{ url_for('admin_organization_toggle_visibility', id=m.id) }}" method="POST" class="inline">
+                                    {% if m.is_visible != 0 %}
+                                    <button type="submit" class="px-2.5 py-1.5 bg-gray-100 hover:bg-rose-50 hover:text-rose-600 text-gray-600 text-xs font-semibold rounded-lg transition" title="Sembunyikan dari landing page">
+                                        <i class="fa-solid fa-eye-slash mr-1"></i> Hide
+                                    </button>
+                                    {% else %}
+                                    <button type="submit" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-lg transition" title="Tampilkan di landing page">
+                                        <i class="fa-solid fa-eye mr-1"></i> Unhide
+                                    </button>
+                                    {% endif %}
+                                </form>
+
+                                <!-- Edit Button -->
+                                <button onclick="openEditModal({{ m.id }}, '{{ m.name|escape }}', '{{ m.role|escape }}', '{{ m.department|escape }}', '{{ m.bio|escape }}', '{{ m.photo_url|escape }}', {{ m.sort_order }}, {{ 1 if m.is_visible != 0 else 0 }})" class="p-2 text-gray-500 hover:text-brand-orange hover:bg-orange-50 rounded-lg transition" title="Edit">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
-                                <form action="{{ url_for('admin_organization_delete', id=m.id) }}" method="POST" onsubmit="return confirm('Hapus anggota ini?');" class="inline">
+
+                                <!-- Delete Button -->
+                                <form action="{{ url_for('admin_organization_delete', id=m.id) }}" method="POST" onsubmit="return confirm('Hapus tenaga ahli ini?');" class="inline">
                                     <button type="submit" class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
@@ -69,7 +137,7 @@
                     <tr>
                         <td colspan="6" class="py-12 text-center text-gray-400">
                             <i class="fa-solid fa-users text-4xl mb-3 opacity-30 block"></i>
-                            <span>Belum ada data anggota struktur organisasi.</span>
+                            <span>Belum ada data tenaga ahli yang ditambahkan.</span>
                         </td>
                     </tr>
                     {% endfor %}
@@ -84,7 +152,7 @@
 <div id="memberModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden transition-opacity">
     <div class="bg-white rounded-3xl max-w-lg w-full mx-4 p-6 sm:p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
-            <h3 id="modalHeading" class="text-lg font-bold text-gray-900">Tambah Anggota Tim</h3>
+            <h3 id="modalHeading" class="text-lg font-bold text-gray-900">Tambah Tenaga Ahli</h3>
             <button onclick="closeMemberModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
         </div>
 
@@ -111,7 +179,7 @@
                     <input type="number" name="sort_order" id="form_sort_order" value="1" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Foto File</label>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Upload File Foto</label>
                     <input type="file" name="photo_file" accept="image/*" class="w-full text-xs text-gray-500 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-orange-50 file:text-brand-orange file:font-semibold">
                 </div>
             </div>
@@ -126,6 +194,11 @@
                 <textarea name="bio" id="form_bio" rows="3" placeholder="Pengalaman atau spesialisasi..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-brand-orange"></textarea>
             </div>
 
+            <div class="flex items-center gap-2 pt-2">
+                <input type="checkbox" name="is_visible" id="form_is_visible" value="1" checked class="w-4 h-4 text-brand-orange rounded border-gray-300 focus:ring-brand-orange">
+                <label for="form_is_visible" class="text-xs font-semibold text-gray-700">Tampilkan di Landing Page (Unhide)</label>
+            </div>
+
             <div class="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
                 <button type="button" onclick="closeMemberModal()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-semibold">Batal</button>
                 <button type="submit" class="bg-brand-orange hover:bg-orange-600 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md text-sm">Simpan</button>
@@ -138,7 +211,7 @@
 {% block admin_scripts %}
 <script>
     function openAddModal() {
-        document.getElementById('modalHeading').textContent = "Tambah Anggota Tim";
+        document.getElementById('modalHeading').textContent = "Tambah Tenaga Ahli";
         document.getElementById('memberForm').action = "{{ url_for('admin_organization_new') }}";
         document.getElementById('form_name').value = "";
         document.getElementById('form_role').value = "";
@@ -146,11 +219,12 @@
         document.getElementById('form_bio').value = "";
         document.getElementById('form_photo_url').value = "";
         document.getElementById('form_sort_order').value = "1";
+        document.getElementById('form_is_visible').checked = true;
         document.getElementById('memberModal').classList.remove('hidden');
     }
 
-    function openEditModal(id, name, role, department, bio, photo_url, sort_order) {
-        document.getElementById('modalHeading').textContent = "Edit Anggota: " + name;
+    function openEditModal(id, name, role, department, bio, photo_url, sort_order, is_visible) {
+        document.getElementById('modalHeading').textContent = "Edit Tenaga Ahli: " + name;
         document.getElementById('memberForm').action = "/admin/organization/edit/" + id;
         document.getElementById('form_name').value = name;
         document.getElementById('form_role').value = role;
@@ -158,6 +232,7 @@
         document.getElementById('form_bio').value = bio;
         document.getElementById('form_photo_url').value = photo_url;
         document.getElementById('form_sort_order').value = sort_order;
+        document.getElementById('form_is_visible').checked = (is_visible == 1);
         document.getElementById('memberModal').classList.remove('hidden');
     }
 

@@ -36,7 +36,9 @@
                 <a href="#visi-misi" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Visi Misi</a>
                 <a href="#layanan" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Layanan</a>
                 <a href="#proyek" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Proyek</a>
+                {% if settings.show_organization != '0' and team_members %}
                 <a href="#organisasi" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Struktur</a>
+                {% endif %}
                 <a href="#legalitas" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Legalitas</a>
                 <a href="#kontak" class="px-4 py-2 bg-brand-orange text-white rounded-xl shadow-md hover:bg-orange-600 transition font-semibold">Kontak</a>
             </nav>
@@ -54,7 +56,9 @@
             <a href="#visi-misi" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Visi Misi</a>
             <a href="#layanan" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Layanan</a>
             <a href="#proyek" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Proyek</a>
+            {% if settings.show_organization != '0' and team_members %}
             <a href="#organisasi" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Struktur Organisasi</a>
+            {% endif %}
             <a href="#legalitas" class="block text-gray-200 hover:text-amber-400 font-medium py-2 border-b border-gray-800 mobile-link">Legalitas Perusahaan</a>
             <a href="#kontak" class="block text-center bg-brand-orange text-white py-3 rounded-xl font-semibold shadow-lg mobile-link">Kontak Kami</a>
         </div>
@@ -326,10 +330,11 @@
     </section>
 
     <!-- Struktur Organisasi Section -->
+    {% if settings.show_organization != '0' and team_members %}
     <section id="organisasi" class="py-20 bg-gray-900 text-white border-t border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-amber-400 font-bold text-sm tracking-wider uppercase bg-white/10 px-3 py-1 rounded-lg">Struktur Organisasi</span>
+                <span class="text-amber-400 font-bold text-sm tracking-wider uppercase bg-white/10 px-3 py-1 rounded-lg">Struktur Organisasi & Tenaga Ahli</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-3">Manajemen & Tenaga Ahli Profesional</h2>
                 <p class="text-gray-400 mt-2 text-sm sm:text-base">Dipimpin oleh individu berintegritas tinggi dengan rekam jejak puluhan tahun di industri konstruksi sipil dan engineering.</p>
             </div>
@@ -351,6 +356,7 @@
             </div>
         </div>
     </section>
+    {% endif %}
 
     <!-- Legalitas Perusahaan Section -->
     <section id="legalitas" class="py-20 bg-gray-50 border-t border-gray-200">
@@ -458,7 +464,9 @@
                         <li><a href="#visi-misi" class="hover:text-amber-400 transition">Visi & Misi</a></li>
                         <li><a href="#layanan" class="hover:text-amber-400 transition">Layanan Kami</a></li>
                         <li><a href="#proyek" class="hover:text-amber-400 transition">Galeri Proyek</a></li>
+                        {% if settings.show_organization != '0' and team_members %}
                         <li><a href="#organisasi" class="hover:text-amber-400 transition">Struktur Organisasi</a></li>
+                        {% endif %}
                         <li><a href="#legalitas" class="hover:text-amber-400 transition">Legalitas Perusahaan</a></li>
                     </ul>
                 </div>

@@ -94,8 +94,8 @@ def index():
     cursor.execute("SELECT * FROM projects ORDER BY sort_order ASC, id DESC")
     projects = cursor.fetchall()
 
-    # Team Members
-    cursor.execute("SELECT * FROM team_members ORDER BY sort_order ASC, id ASC")
+    # Team Members (only visible ones for public)
+    cursor.execute("SELECT * FROM team_members WHERE is_visible = 1 ORDER BY sort_order ASC, id ASC")
     team_members = cursor.fetchall()
 
     # Legalities
@@ -454,8 +454,43 @@ def admin_organization():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM team_members ORDER BY sort_order ASC, id ASC")
     members = cursor.fetchall()
+    cursor.execute("SELECT value FROM settings WHERE key = 'show_organization'")
+    row = cursor.fetchone()
+    show_org = row['value'] if row else '1'
     conn.close()
-    return render_template('admin/organization.html', members=members)
+    return render_template('admin/organization.html', members=members, show_organization=show_org)
+
+@app.route('/admin/organization/toggle-section', methods=['POST'])
+@login_required
+def admin_organization_toggle_section():
+    conn = db.get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT value FROM settings WHERE key = 'show_organization'")
+    row = cursor.fetchone()
+    current_val = row['value'] if row else '1'
+    new_val = '0' if current_val == '1' else '1'
+    cursor.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('show_organization', ?)", (new_val,))
+    conn.commit()
+    conn.close()
+    status_text = "Ditampilkan (Unhide)" if new_val == '1' else "Disembunyikan (Hide)"
+    flash(f"Bagian Tenaga Ahli / Struktur Organisasi di Landing Page sekarang: {status_text}", "success")
+    return redirect(url_for('admin_organization'))
+
+@app.route('/admin/organization/toggle-visibility/<int:id>', methods=['POST'])
+@login_required
+def admin_organization_toggle_visibility(id):
+    conn = db.get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name, is_visible FROM team_members WHERE id = ?", (id,))
+    member = cursor.fetchone()
+    if member:
+        new_vis = 0 if member['is_visible'] == 1 else 1
+        cursor.execute("UPDATE team_members SET is_visible = ? WHERE id = ?", (new_vis, id))
+        conn.commit()
+        status_text = "Ditampilkan di landing page" if new_vis == 1 else "Disembunyikan dari landing page"
+        flash(f'Status Tenaga Ahli "{member["name"]}" diubah menjadi: {status_text}.', 'success')
+    conn.close()
+    return redirect(url_for('admin_organization'))
 
 @app.route('/admin/organization/new', methods=['POST'])
 @login_required
@@ -466,6 +501,7 @@ def admin_organization_new():
     bio = request.form.get('bio', '').strip()
     photo_url = request.form.get('photo_url', '').strip()
     sort_order = int(request.form.get('sort_order', 0) or 0)
+    is_visible = 1 if request.form.get('is_visible') else 0
 
     uploaded_file = save_uploaded_file(request.files.get('photo_file'))
     if uploaded_file:
@@ -476,9 +512,9 @@ def admin_organization_new():
     conn = db.get_db()
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO team_members (name, role, department, photo_url, bio, sort_order)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ''', (name, role, department, photo_url, bio, sort_order))
+        INSERT INTO team_members (name, role, department, photo_url, bio, sort_order, is_visible)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ''', (name, role, department, photo_url, bio, sort_order, is_visible))
     conn.commit()
     conn.close()
 
@@ -494,6 +530,7 @@ def admin_organization_edit(id):
     bio = request.form.get('bio', '').strip()
     photo_url = request.form.get('photo_url', '').strip()
     sort_order = int(request.form.get('sort_order', 0) or 0)
+    is_visible = 1 if request.form.get('is_visible') else 0
 
     conn = db.get_db()
     cursor = conn.cursor()
@@ -513,9 +550,9 @@ def admin_organization_edit(id):
 
     cursor.execute('''
         UPDATE team_members
-        SET name = ?, role = ?, department = ?, photo_url = ?, bio = ?, sort_order = ?
+        SET name = ?, role = ?, department = ?, photo_url = ?, bio = ?, sort_order = ?, is_visible = ?
         WHERE id = ?
-    ''', (name, role, department, photo_url, bio, sort_order, id))
+    ''', (name, role, department, photo_url, bio, sort_order, is_visible, id))
     conn.commit()
     conn.close()
 

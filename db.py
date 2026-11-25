@@ -72,9 +72,16 @@ def init_db():
             department TEXT,
             photo_url TEXT,
             bio TEXT,
-            sort_order INTEGER DEFAULT 0
+            sort_order INTEGER DEFAULT 0,
+            is_visible INTEGER DEFAULT 1
         )
     ''')
+
+    # Migration: ensure is_visible exists in team_members
+    cursor.execute("PRAGMA table_info(team_members)")
+    tm_cols = [row[1] for row in cursor.fetchall()]
+    if 'is_visible' not in tm_cols:
+        cursor.execute("ALTER TABLE team_members ADD COLUMN is_visible INTEGER DEFAULT 1")
 
     # Legalities Table
     cursor.execute('''
@@ -166,6 +173,7 @@ def seed_data(cursor):
         'company_email': 'info@arunikapersada.co.id',
         'company_phone': '+62 812-9876-5432',
         'company_whatsapp': '6281298765432',
+        'show_organization': '1',
         'copyright_text': '2026 PT Arunika Loise Persada. All Rights Reserved.'
     }
 
