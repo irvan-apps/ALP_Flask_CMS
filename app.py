@@ -68,6 +68,10 @@ def inject_global_data():
 # ==========================================
 # PUBLIC FRONTEND ROUTES
 # ==========================================
+@app.route('/zohoverify/verifyforzoho.html')
+def zoho_verify():
+    return "58200609"
+
 
 @app.route('/')
 def index():
